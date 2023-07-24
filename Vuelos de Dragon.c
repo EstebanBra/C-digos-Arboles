@@ -43,7 +43,7 @@ int main()
         case 1:
             limpiarPantalla();
             printf("\t\tReservas de vuelos\n\n");
-            printf("¿Cuantas Reservas Desea hacer?\n->");
+            printf("Cuantas Reservas Desea hacer?\n->");
             scanf("%d", &cantidadReservas);
             limpiarBuffer();
             for (i = 0; i < cantidadReservas; i++)
@@ -56,10 +56,8 @@ int main()
                 printf("Ingrese Su Nombre:\n->");
                 fgets(nombre, sizeof(nombre), stdin);
 
-
                 printf("Ingrese el Destino de su Vuelo:\n->");
                 fgets(destino, sizeof(destino), stdin);
-
 
                 raizReservas = insertarVueloDeDragon(raizReservas, numReserva, nombre, destino);
 
@@ -90,7 +88,7 @@ int main()
             esperarTecla();
             break;
         case 0:
-            printf("\n¡Hasta Luego!\n");
+            printf("\nHasta Pronto!. Buenas Suerte Aventurero\n");
             liberarArbol(raizReservas);
             break;
         default:
@@ -124,7 +122,7 @@ void bienvenida()
 {
     printf("\n\t\tBIENVENIDO A LOS VUELOS DE DRAGON\n");
 
-    printf("\n\tAqui podras realizar reservas de vuelos en ¡DRAGONES! \n\n");
+    printf("\n\tAqui podras realizar reservas de vuelos en DRAGONES!, puedes ir a cualquier parte del mundo.\n\n");
     esperarTecla();
     limpiarPantalla();
 }
@@ -144,14 +142,14 @@ void menu()
            "|      0. Salir del Programa.                 |\n"
            "|*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*|\n");
 
-    printf("\nIngrese numero de la opcion: \n");
+    printf("\nIngrese numero de la opcion:\n->");
 }
 void mostrarReservasInOrden(RESERVA *raizReservas)
 {
     if (raizReservas != NULL)
     {
         mostrarReservasInOrden(raizReservas->izquierda);
-        printf("Número de reserva: %d\n", raizReservas->numReserva);
+        printf("Numero de reserva: %d\n", raizReservas->numReserva);
         printf("Nombre: %s", raizReservas->nombre);
         printf("Destino: %s\n\n", raizReservas->destino);
         mostrarReservasInOrden(raizReservas->derecha);
@@ -188,6 +186,47 @@ RESERVA *insertarVueloDeDragon(RESERVA *raizReservas, int numReservaIngresado, c
     }
     return raizReservas;
 }
+RESERVA *cancelarReserva(RESERVA *raizReservas, int numReserva)
+{
+    if (raizReservas == NULL)
+    {
+        printf("No se econtro la reserva %d en los registros, por lo tanto no se puede eliminar", numReserva);
+        return raizReservas;
+    }
+
+    if (numReserva < raizReservas->numReserva)
+    {
+        raizReservas->izquierda = cancelarReserva(raizReservas->izquierda, numReserva);
+    }
+    else if (numReserva > raizReservas->numReserva)
+    {
+        raizReservas->derecha = cancelarReserva(raizReservas->derecha, numReserva);
+    }
+    else
+    {
+        // Si los nodos tienen al menos un hijo
+        if (raizReservas->izquierda == NULL)
+        {
+            RESERVA *auxReserva = raizReservas->derecha;
+            free(raizReservas);
+            return auxReserva;
+        }
+        else if (raizReservas->derecha == NULL)
+        {
+            RESERVA *auxReserva = raizReservas->izquierda;
+            free(raizReservas);
+            return auxReserva;
+        }
+        // Nodo Con dos hijos, encontrar sucesor inOrden
+        RESERVA *sucesor = raizReservas->derecha;
+        while(sucesor->izquierda != NULL)
+        {
+            sucesor = sucesor->izquierda;
+        }
+        
+        0
+    }
+}
 void buscarReserva(RESERVA *raizReservas, int numReservaBuscado)
 {
     if (raizReservas == NULL)
@@ -198,7 +237,7 @@ void buscarReserva(RESERVA *raizReservas, int numReservaBuscado)
     if (raizReservas->numReserva == numReservaBuscado)
     {
         printf("Reserva Encontrada:\n");
-        printf("Número de reserva: %d\n", raizReservas->numReserva);
+        printf("Numero de reserva: %d\n", raizReservas->numReserva);
         printf("Nombre: %s", raizReservas->nombre);
         printf("Destino: %s\n", raizReservas->destino);
         return;
